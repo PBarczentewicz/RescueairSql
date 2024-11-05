@@ -1,13 +1,12 @@
 package org.example;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         DataBaseConection newContecion = new DataBaseConection();
-        newContecion.setingsForSql();
+        for (Post post : newContecion.getPostQueary()){
+            System.out.println("Post " + post.post_author + post.post_title);
+        }
     }
 }
