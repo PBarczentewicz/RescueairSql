@@ -3,10 +3,10 @@ package org.example;
 import java.sql.*;
 
 public class Main {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         DataBaseConection newContecion = new DataBaseConection();
-        for (Post post : newContecion.getPostQueary()){
-            System.out.println("Post " + post.post_author + post.post_title);
+        for (Post post : newContecion.getPostQuery()){
+            System.out.println("Post Author " + post.post_author + " Post Title " + post.post_title);
         }
     }
 }

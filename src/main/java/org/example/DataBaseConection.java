@@ -4,46 +4,25 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class DataBaseConection {
-
-    BasicSetings basicSetings = new BasicSetings();
     LoginUtylities loginUtylities = new LoginUtylities();
-    private Connection connection = null;
-    private Statement statement = null;
 
-    private ResultSet DataBaseConnection(String sqlQuery) throws SQLException {
-
-        try {
-            Class.forName(basicSetings.getJdbcDriver());
-            connection = DriverManager.getConnection(loginUtylities.getUrl(), loginUtylities.getLogin(), loginUtylities.getPassword());
-            statement = connection.createStatement();
-            return statement.executeQuery(sqlQuery);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-
-        }
-        return null;
-    }
-
-    public ArrayList<Post> getPostQueary() throws SQLException {
-        ResultSet resultSet = DataBaseConnection("Select * from wp_posts");
+    public ArrayList<Post> getPostQuery() {
         ArrayList<Post> postList = new ArrayList<>();
+        String sqlQuery = "SELECT post_author, post_title FROM wp_posts";
 
-        while (resultSet.next()) {
-            postList.add(new Post(resultSet.getString("post_author"), resultSet.getString("post_title")));
-        }
-        closeConection();
-        return postList;
+        try (Connection connection = DriverManager.getConnection(loginUtylities.getUrl(), loginUtylities.getLogin(), loginUtylities.getPassword());
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(sqlQuery)) {
 
-    }
-
-    private void closeConection() {
-        try {
-            if (statement != null) statement.close();
-            if (connection != null) connection.close();
-        } catch (Exception e) {
+            while (resultSet.next()) {
+                String author = resultSet.getString("post_author");
+                String title = resultSet.getString("post_title");
+                postList.add(new Post(author, title));
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
+        return postList;
     }
 }
 
